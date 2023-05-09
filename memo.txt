@@ -1,2 +1,2 @@
 service-discovery : discoveryservice, user-service
-api-gateway-service :
+api-gateway-service : first-service, second-service, zuul-service
