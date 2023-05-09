@@ -1,0 +1,2 @@
+service-discovery : discoveryservice, user-service
+api-gateway-service :
