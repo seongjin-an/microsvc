@@ -10,9 +10,10 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 
 @Slf4j
-//@Component
+@Component
 public class ZuulLoggingFilter extends ZuulFilter {
 
+    // 동작 정의
     @Override
     public Object run() throws ZuulException {
         log.info("**************** printing logs: ");
@@ -24,11 +25,13 @@ public class ZuulLoggingFilter extends ZuulFilter {
         return null;
     }
 
+    // 사전? 사후? 에 대한 필터 타입
     @Override
     public String filterType() {
         return "pre";
     }
 
+    // 순서
     @Override
     public int filterOrder() {
         return 1;
