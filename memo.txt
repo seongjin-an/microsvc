@@ -1,2 +1,3 @@
 service-discovery : discoveryservice, user-service
 api-gateway-service : first-service, second-service, zuul-service, apigateway-service
+users microservice: user-service2
