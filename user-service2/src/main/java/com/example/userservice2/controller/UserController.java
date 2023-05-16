@@ -1,10 +1,13 @@
 package com.example.userservice2.controller;
 
+import com.example.userservice2.dto.UserDto;
+import com.example.userservice2.service.UserService;
 import com.example.userservice2.vo.Greeting;
+import com.example.userservice2.vo.RequestUser;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.core.env.Environment;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/")
@@ -14,9 +17,12 @@ public class UserController {
 
     private Greeting greeting;
 
-    public UserController(Environment env, Greeting greeting) {
+    private UserService userService;
+
+    public UserController(Environment env, Greeting greeting, UserService userService) {
         this.env = env;
         this.greeting = greeting;
+        this.userService = userService;
     }
 
     @GetMapping("/health_check")
@@ -30,4 +36,14 @@ public class UserController {
         return greeting.getMessage();
     }
 
+
+
+    @PostMapping("/users")
+    public String createUser(@RequestBody RequestUser user) {
+        ModelMapper modelMapper = new ModelMapper();
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        UserDto userDto = modelMapper.map(user, UserDto.class);
+        userService.createUser(userDto);
+        return "Create user method is called";
+    }
 }
