@@ -10,7 +10,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class WebSecurity {
 
-    private String[] WHITE_LIST = {"/users/**"};
+    private String[] WHITE_LIST = {"/user-service/**", "/**"};
     @Bean
     protected SecurityFilterChain config(HttpSecurity http) throws Exception {
         http.csrf().disable();
