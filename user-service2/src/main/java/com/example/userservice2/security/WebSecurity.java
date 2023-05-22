@@ -24,20 +24,20 @@ public class WebSecurity {
 
 //        http.authorizeHttpRequests(authorize -> authorize
 //                .requestMatchers(WHITE_LIST).permitAll());
-
+        AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
         http.authorizeHttpRequests((authorizationManagerRequestMatcherRegistry -> {
             authorizationManagerRequestMatcherRegistry.requestMatchers("/**").access(((authentication, context) -> {
                 IpAddressMatcher ipAddressMatcher = new IpAddressMatcher("127.0.0.1");
                 HttpServletRequest request = context.getRequest();
                 return new AuthorizationDecision(ipAddressMatcher.matches(request));
-            })).and().addFilter(getAuthenticationFilter());
+            })).and().addFilter(getAuthenticationFilter(authenticationManager));
         }));
         return http.build();
     }
 
-    private AuthenticationFilter getAuthenticationFilter() {
+    private AuthenticationFilter getAuthenticationFilter(AuthenticationManager authenticationManager) {
         AuthenticationFilter authenticationFilter = new AuthenticationFilter();
-        authenticationFilter.setAuthenticationManager(authentication -> null);
+        authenticationFilter.setAuthenticationManager(authenticationManager);
         return authenticationFilter;
     }
 }
