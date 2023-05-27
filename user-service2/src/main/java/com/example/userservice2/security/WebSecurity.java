@@ -1,43 +1,50 @@
 package com.example.userservice2.security;
 
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.context.annotation.Bean;
+import com.example.userservice2.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authorization.AuthorizationDecision;
+import org.springframework.core.env.Environment;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.util.matcher.IpAddressMatcher;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurity {
+public class WebSecurity extends WebSecurityConfigurerAdapter {
 
-    private String[] WHITE_LIST = {"/user-service/**", "/**"};
-    @Bean
-    protected SecurityFilterChain config(HttpSecurity http) throws Exception {
-        http.csrf().disable();
-        http.headers().frameOptions().disable();
+    private final Environment env;
+    private final UserService userService;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-//        http.authorizeHttpRequests(authorize -> authorize
-//                .requestMatchers(WHITE_LIST).permitAll());
-        AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
-        http.authorizeHttpRequests((authorizationManagerRequestMatcherRegistry -> {
-            authorizationManagerRequestMatcherRegistry.requestMatchers("/**").access(((authentication, context) -> {
-                IpAddressMatcher ipAddressMatcher = new IpAddressMatcher("127.0.0.1");
-                HttpServletRequest request = context.getRequest();
-                return new AuthorizationDecision(ipAddressMatcher.matches(request));
-            })).and().addFilter(getAuthenticationFilter(authenticationManager));
-        }));
-        return http.build();
+    @Autowired
+    public WebSecurity(Environment env, UserService userService, BCryptPasswordEncoder passwordEncoder) {
+        this.env = env;
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    private AuthenticationFilter getAuthenticationFilter(AuthenticationManager authenticationManager) {
+    private String[] WHITE_LIST = {"/user-service/**", "/**"};
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable();
+
+        http.authorizeRequests().antMatchers("/**").hasIpAddress("/**")
+                .and()
+                .addFilter(getAuthenticationFilter());
+        http.headers().frameOptions().disable();
+    }
+
+    private AuthenticationFilter getAuthenticationFilter() throws Exception {
         AuthenticationFilter authenticationFilter = new AuthenticationFilter();
-        authenticationFilter.setAuthenticationManager(authenticationManager);
+        authenticationFilter.setAuthenticationManager(authenticationManager());
         return authenticationFilter;
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userService).passwordEncoder(passwordEncoder);
     }
 }

@@ -1,7 +1,8 @@
 package com.example.userservice2.jpa;
 
-import jakarta.persistence.*;
 import lombok.Data;
+
+import javax.persistence.*;
 
 @Data
 @Entity
