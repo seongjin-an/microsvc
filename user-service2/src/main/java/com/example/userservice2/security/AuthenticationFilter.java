@@ -4,6 +4,11 @@ import com.example.userservice2.dto.UserDto;
 import com.example.userservice2.service.UserService;
 import com.example.userservice2.vo.RequestLogin;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,8 +23,12 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.crypto.SecretKey;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.util.ArrayList;
+import java.util.Date;
 
 @Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -60,5 +69,31 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String username = ((User) authResult.getPrincipal()).getUsername();
         log.debug(username);
         UserDto userDetails = userService.getUserDetailsByEmail(username);
+        /*
+        Claims claims = Jwts.claims();
+        claims.setSubject("user_token");
+        Date date = new Date();
+        Date exp = new Date(date.getTime() + 1000 * 60 * 60 * 24);
+        claims.setIssuedAt(date);
+        claims.setExpiration(exp);
+
+        SecretKey secretKey = Keys.hmacShaKeyFor("6v9y$B&E)H@MbQeThWmZq4t7w!z%C*F-".getBytes(StandardCharsets.UTF_8));
+//        JwtParser parser = Jwts.parserBuilder().setSigningKey(secretKey).build();
+
+        String token = Jwts.builder()
+                .setClaims(claims)
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+         */
+        String token = Jwts.builder()
+                .setSubject(userDetails.getUserId())
+                .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time"))))
+                .signWith(Keys.hmacShaKeyFor("6v9y$B&E)H@MbQeThWmZq4t7w!z%C*F-Ev78q(*u$@h%)Sdk@%*df930-452J*I)@*$skdfst#(oeskejf13854ry@)*$#EU9".getBytes(StandardCharsets.UTF_8)),
+                        SignatureAlgorithm.HS512)
+                .compact();
+
+        response.addHeader("token", token);
+        response.addHeader("userId", userDetails.getUserId());
+        // https://targetcoders.com/jjwt-%ec%82%ac%ec%9a%a9-%eb%b0%a9%eb%b2%95/
     }
 }
