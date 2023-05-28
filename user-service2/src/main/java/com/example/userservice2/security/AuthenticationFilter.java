@@ -1,12 +1,17 @@
 package com.example.userservice2.security;
 
+import com.example.userservice2.dto.UserDto;
+import com.example.userservice2.service.UserService;
 import com.example.userservice2.vo.RequestLogin;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.env.Environment;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -18,6 +23,17 @@ import java.util.ArrayList;
 
 @Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
+    private final UserService userService;
+    private final Environment env;
+
+    public AuthenticationFilter(AuthenticationManager authenticationManager, UserService userService, Environment env) {
+//        super(authenticationManager);
+        super.setAuthenticationManager(authenticationManager);
+        this.userService = userService;
+        this.env = env;
+    }
+
     // 인증 요청이 들어왔을 경우
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request,
@@ -41,6 +57,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                             FilterChain chain,
                                             Authentication authResult) throws IOException, ServletException {
 //        super.successfulAuthentication(request, response, chain, authResult);// 이거 주석 안하면 로그인 시 에러가 발생함
-        log.debug(((User)authResult.getPrincipal()).getUsername());
+        String username = ((User) authResult.getPrincipal()).getUsername();
+        log.debug(username);
+        UserDto userDetails = userService.getUserDetailsByEmail(username);
     }
 }
