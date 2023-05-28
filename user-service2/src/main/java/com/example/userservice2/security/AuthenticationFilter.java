@@ -85,10 +85,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
          */
+        String secret = env.getProperty("token.secret");
         String token = Jwts.builder()
                 .setSubject(userDetails.getUserId())
                 .setExpiration(new Date(System.currentTimeMillis() + Long.parseLong(env.getProperty("token.expiration_time"))))
-                .signWith(Keys.hmacShaKeyFor("6v9y$B&E)H@MbQeThWmZq4t7w!z%C*F-Ev78q(*u$@h%)Sdk@%*df930-452J*I)@*$skdfst#(oeskejf13854ry@)*$#EU9".getBytes(StandardCharsets.UTF_8)),
+                .signWith(Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)),
                         SignatureAlgorithm.HS512)
                 .compact();
 

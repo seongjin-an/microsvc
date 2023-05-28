@@ -1,3 +1,7 @@
+token:
+  expiration_time: 86400000
+  secret: 6v9y$B&E)H@MbQeThWmZq4t7w!z%C*F-Ev78q(*u$@h%)Sdk@%*df930-452J*I)@*$skdfst#(oeskejf13854ry@)*$#EU9
+
 server:
   port: 8000
 
@@ -56,6 +60,7 @@ spring:
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter
         - id: first-service
 #          uri: http://localhost:8081/
           uri: lb://MY-FIRST-SERVICE
