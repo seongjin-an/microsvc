@@ -8,4 +8,5 @@ spring:
     config:
       server:
         git:
-          uri: file:///home/seongjin/workspace/git-local-repo
+#          uri: file:///home/seongjin/workspace/git-local-repo
+          uri: https://github.com/seongjin-an/something-cloud-config
