@@ -6,3 +6,4 @@ order microservice: order-service
 
 git-local-repo: /home/seongjin/workspace/git-local-repo/ecommerce.yml
 config-service: config-service
+git-local-repo: /home/seongjin/workspace/git-local-repo/ecommerce.yml, ecommerce-dev.yml, ecommerce-prod.yml
