@@ -14,6 +14,9 @@ spring:
 #    url: jdbc:h2:mem:test
     username: sa
     password:
+  config:
+    import:
+      - classpath:/bootstap.yml
 
 
 eureka:
@@ -32,6 +35,11 @@ logging:
   level:
     com.example.userservice2: DEBUG
 
-token:
-  expiration_time: 86400000
-  secret: 6v9y$B&E)H@MbQeThWmZq4t7w!z%C*F-Ev78q(*u$@h%)Sdk@%*df930-452J*I)@*$skdfst#(oeskejf13854ry@)*$#EU9
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans
+#token:
+#  expiration_time: 86400000
+#  secret: 6v9y$B&E)H@MbQeThWmZq4t7w!z%C*F-Ev78q(*u$@h%)Sdk@%*df930-452J*I)@*$skdfst#(oeskejf13854ry@)*$#EU9
