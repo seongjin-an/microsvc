@@ -3,3 +3,6 @@ api-gateway-service : first-service, second-service, zuul-service, apigateway-se
 users microservice: user-service2
 catalog microservice: catalog-service
 order microservice: order-service
+
+git-local-repo: /home/seongjin/workspace/git-local-repo/ecommerce.yml
+config-service: config-service
