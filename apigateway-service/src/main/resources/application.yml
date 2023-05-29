@@ -2,6 +2,12 @@ token:
   expiration_time: 86400000
   secret: 6v9y$B&E)H@MbQeThWmZq4t7w!z%C*F-Ev78q(*u$@h%)Sdk@%*df930-452J*I)@*$skdfst#(oeskejf13854ry@)*$#EU9
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh, health, beans, httpexchanges
+
 server:
   port: 8000
 
@@ -11,7 +17,6 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka
-
 spring:
   application:
     name: apigateway-service
@@ -36,6 +41,14 @@ spring:
 #          uri: lb://USER-SERVICE
 #          predicates:
 #            - Path=/user-service/**
+        - id: user-service
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/actuator/**
+            - Method=GET,POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
         - id: user-service
           uri: lb://USER-SERVICE
           predicates:
@@ -84,3 +97,6 @@ spring:
                 baseMessage: hi, there
                 preLogger: true
                 postLogger: true
+  config:
+    import:
+      - classpath:/bootstrap.yml

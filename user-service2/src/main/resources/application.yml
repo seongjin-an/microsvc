@@ -16,7 +16,7 @@ spring:
     password:
   config:
     import:
-      - classpath:/bootstap.yml
+      - classpath:/bootstrap.yml
 
 
 eureka:
