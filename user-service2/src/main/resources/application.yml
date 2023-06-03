@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: user-service
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
   jpa:
     hibernate:
       ddl-auto: update
@@ -39,7 +44,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh, health, beans
+        include: refresh, health, beans, busrefresh
 #token:
 #  expiration_time: 86400000
 #  secret: 6v9y$B&E)H@MbQeThWmZq4t7w!z%C*F-Ev78q(*u$@h%)Sdk@%*df930-452J*I)@*$skdfst#(oeskejf13854ry@)*$#EU9
