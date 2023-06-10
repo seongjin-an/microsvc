@@ -13,10 +13,10 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:tcp://localhost/~/test
+    url: jdbc:h2:tcp://localhost/~/h2/dbs/test
     #    url: jdbc:h2:mem:test
     username: sa
-    password:
+    password: 1234
   sql:
     init:
 #      schema-locations: classpath:data.sql
