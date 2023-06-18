@@ -20,7 +20,7 @@ public class KafkaConsumer {
 
     private final CatalogRepository repository;
 
-    @KafkaListener(topics = "example-catalog-topic")
+    @KafkaListener(topics = "example-catalog-topic", groupId = "consumerGroupId")
     public void updateQty(String kafkaMessage) {
         log.info("Kafka Message: -> {}", kafkaMessage);
 
@@ -38,8 +38,5 @@ public class KafkaConsumer {
             entity.setStock(entity.getStock() - (Integer) map.get("qty"));
             repository.save(entity);
         }
-
-
     }
-
 }
