@@ -3,8 +3,19 @@ server:
   port: 0
 
 spring:
+#  cloud:
+#    compatibility-verifier:
+#      enabled: false
   application:
     name: order-service
+  zipkin:
+    base-url: http://127.0.0.1:9411
+    enabled: true
+#  sleuth:
+#    traceId128: true
+#    sampler:
+#      probability: 1.0
+#    supports-join: false
   jpa:
     hibernate:
       ddl-auto: update
@@ -44,5 +55,16 @@ eureka:
       defaultZone: http://127.0.0.1:8761/eureka
 
 logging:
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
   level:
     com.example.orderservice: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  tracing:
+    sampling:
+      probability: 1.0

@@ -2,8 +2,17 @@ server:
   port: 0
 
 spring:
+#  cloud:
+#    compatibility-verifier:
+#      enabled: false
   application:
     name: user-service
+  zipkin:
+    base-url: http://127.0.0.1:9411
+    enabled: true
+#  sleuth:
+#    sampler:
+#      probability: 1.0
   rabbitmq:
     host: 127.0.0.1
     port: 5672
@@ -43,6 +52,8 @@ greeting:
   message: Welcom to the simple E-commerce
 
 logging:
+  pattern:
+    level: '%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]'
   level:
     com.example.userservice2.client: DEBUG
 
@@ -51,7 +62,11 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh, health, beans, busrefresh
+#        include: refresh, health, beans, busrefresh
+        include: '*'
+  tracing:
+    sampling:
+      probability: 1.0
 #token:
 #  expiration_time: 86400000
 #  secret: 6v9y$B&E)H@MbQeThWmZq4t7w!z%C*F-Ev78q(*u$@h%)Sdk@%*df930-452J*I)@*$skdfst#(oeskejf13854ry@)*$#EU9
