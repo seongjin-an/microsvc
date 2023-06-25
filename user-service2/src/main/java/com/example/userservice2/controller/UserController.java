@@ -33,7 +33,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @Timed("users.healthcheck")
+    @Timed("users.status")
     @GetMapping("/health_check")
     public String status() {
         return "It's Working in User Service" +
