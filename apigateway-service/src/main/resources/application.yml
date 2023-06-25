@@ -6,7 +6,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh, health, beans, httpexchanges, busrefresh
+        include: refresh, health, beans, httpexchanges, busrefresh, info, metrics, prometheus
 
 server:
   port: 8000

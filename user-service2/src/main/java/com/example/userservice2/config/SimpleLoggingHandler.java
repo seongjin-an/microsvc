@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
-@Component
+//@Component
 public class SimpleLoggingHandler implements ObservationHandler<Observation.Context> {
 
     private static final Logger log = LoggerFactory.getLogger(SimpleLoggingHandler.class);
