@@ -62,7 +62,7 @@ public class OrderController {
 
 
         /* send this order to KAFKA */
-//        kafkaProducer.send("example-catalog-topic", orderDto);
+        kafkaProducer.send("example-catalog-topic", orderDto);
 //        orderProducer.send("orders", orderDto);
 //
 //        ResponseOrder responseOrder = mapper.map(orderDto, ResponseOrder.class);
